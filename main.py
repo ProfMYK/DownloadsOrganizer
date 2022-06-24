@@ -25,23 +25,24 @@ for key in extensions.keys():
 for key in customExtensions.keys():
     if not os.path.exists(gotoDir + key + "/"):
         os.makedirs(gotoDir + key + "/")
+if not os.path.exists(gotoDir + "Unknown/"):
+    os.makedirs(gotoDir + "Unknown/")
 
-os.makedirs(gotoDir + "Unknown/")
+def organize():
+    files = os.listdir()
+    for f in files:
+        placed = False
+        for key in extensions.keys():
+            for ext in extensions[key]:
+                if f.endswith("." + ext):
+                    os.rename(downDir + f, gotoDir + key + "/" + f)
+                    placed = True
 
-placed = False
-files = os.listdir()
-for f in files:
-    for key in extensions.keys():
-        for ext in extensions[key]:
-            if f.endswith("." + ext):
-                os.rename(downDir + f, gotoDir + key + "/" + f)
-                placed = True
+        for key in customExtensions.keys():
+            for ext in customExtensions[key]:
+                if f.endswith("." + ext):
+                    os.rename(downDir + f, gotoDir + key + "/" + f)
+                    placed = True
 
-    for key in customExtensions.keys():
-        for ext in customExtensions[key]:
-            if f.endswith("." + ext):
-                os.rename(downDir + f, gotoDir + key + "/" + f)
-                placed = True
-
-    if not placed:
-        os.rename(downDir + f, gotoDir + "Unknown/" + f)
+        if not placed:
+            os.rename(downDir + f, gotoDir + "Unknown/" + f)
