@@ -11,9 +11,8 @@ You can add custom folders for some specific file extensions. For example you ha
 * Audios: 3gp, aa, aac, aax, act, aiff, alac, amr, ape, au, awb, dss, dvf, flac, gsm, iklax, ivs, m4a, m4b, m4p, mmf, mp3, mpc, msv, nmf, ogg, oga, mogg, opus, ra, rm, raw, rf64, sin, tta, voc, vox, wav, wv, webm, 8svx, cda
 * Texts: doc, docx, odt, pdf, rtf, tex, txt, wpd
 * Data Files: csv, dat, db, dbf, log, mdb, sav, sql, tar, xml
-* OS Files(i think): bin, dmg, iso, toast, vcd
+* OS Files(thats what they are called right): bin, dmg, iso, toast, vcd
 * Zip Files: 7z, arj, deb, pkg, rar, rpm, tar.gz, z, zip
 * Executables: exe
-* Java Files: jar, java
 
 You can change the default folders and their extensions by modifying the extension.json file.

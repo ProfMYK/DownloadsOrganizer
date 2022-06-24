@@ -6,6 +6,5 @@
     "Data": ["csv", "dat", "db", "dbf", "log", "mdb", "sav", "sql", "tar", "xml"],
     "OS": ["bin", "dmg", "iso", "toast", "vcd"],
     "Zip": ["7z", "arj", "deb", "pkg", "rar", "rpm", "tar.gz", "z", "zip"],
-    "Executables": ["exe"],
-    "Java": ["jar", "java"]
+    "Executables": ["exe"]
 }
