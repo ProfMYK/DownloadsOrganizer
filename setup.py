@@ -1,6 +1,8 @@
 import os
 import json
+from venv import create
 from colorama import Fore
+from organizer import createFolders
 import colorama
 colorama.init(autoreset=True)
 
@@ -21,7 +23,7 @@ while not os.path.exists(gotoDir):
     gotoDir = input("Whay is the directory that you want the files to go: ")
 
 data = {"downDir": downDir, "gotoDir": gotoDir}
-with open("data/importantData.json", "w") as f:
+with open("data/dirs.json", "w") as f:
     f.write(json.dumps(data, indent=4))
 
 data = {}
@@ -38,6 +40,7 @@ while run.upper() == "Y":
     data[folderName] = exts
     print(f"Added the folder {folderName}.")
     run = input("Do you want to continue adding custom folders for spesific file extensions(Y/N): ")
+
 
 with open("data/customExtensions.json", "w") as f:
     f.write(json.dumps(data, indent=4))
