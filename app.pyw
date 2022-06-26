@@ -1,7 +1,11 @@
 from tkinter import *
 import json
 from tkinter import filedialog
-from organizer import addNewFolder, organize
+from organizer import addNewFolder, organize, createData
+import os
+
+if not os.path.exists("data"):
+    createData()
 
 root = Tk()
 root.title("Downloads Organizer")
@@ -21,7 +25,7 @@ def selectDownDir():
     
     with open("data/dirs.json", "r") as f:
         data = json.load(f)
-    data["downDir"] = downDir
+    data["downDir"] = downDir + "/"
     with open("data/dirs.json", "w") as f:
         json.dump(data, f, indent=4)
 
@@ -39,7 +43,7 @@ def selectGotoDir():
 
     with open("data/dirs.json", "r") as f:
         data = json.load(f)
-    data["gotoDir"] = gotoDir
+    data["gotoDir"] = gotoDir + "/"
     with open("data/dirs.json", "w") as f:
         json.dump(data, f, indent=4)
 
@@ -50,12 +54,15 @@ gotoDirB.grid(row=1, column=1)
 
 extCnt = 1
 def openNewFolderWindow():
+    global extCnt
+    extCnt = 1
+
     top = Toplevel()
     top.title("Add a new folder")
 
     extes = []
 
-    def deleteExtE(num):
+    def deleteExtE():
         # TODO: add deletion for the extension entries
         ...
 
@@ -78,14 +85,31 @@ def openNewFolderWindow():
 
     extB = Button(top, text="Add Extension", command=addExtension).grid(row=0, column=2)
 
-    # TODO: Finish the adding folder system 👌
+    def done():
+        exts = []
+        for exte in extes:
+            exts.append(exte[0].get())
+        
+        addNewFolder(nameE.get(), exts)
+        top.destroy()
+
+    doneB = Button(top, text="Add", command=done).grid(row=100, column=2)
 
 # TODO: Add a way so that users can see the custom folders that they added
+# TODO: Implement Custom folder edit thing 😥
 
 addNew = Button(root, text="Add a new folder!", command=openNewFolderWindow)
 addNew.grid(row=2, column=0)
 
-orgBut = Button(root, text="Organize!", command=lambda: organize(downDir, gotoDir))
+def org():
+    with open("data/dirs.json", "r") as f:
+        tmp = json.load(f)
+    down = tmp["downDir"]
+    goto = tmp["gotoDir"]
+
+    organize(down, goto)
+
+orgBut = Button(root, text="Organize!", command=org)
 orgBut.grid(row=2, column=1)
 
 mainloop()
