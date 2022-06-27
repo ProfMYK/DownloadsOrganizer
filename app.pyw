@@ -4,6 +4,7 @@ from tkinter import filedialog
 from tkinter import messagebox
 from organizer import addNewFolder, organize, createData
 import os
+import time
 
 if not os.path.exists("data"):
     createData()
@@ -63,12 +64,15 @@ def openNewFolderWindow():
 
     extes = []
 
-    def deleteExtE():
-        # TODO: add deletion for the extension entries
-        ...
 
     def addExtension():
         global extCnt
+        def deleteExtE():
+            for i, en in enumerate(extes):
+                if db == en[1]:
+                    del extes[i]
+            db.destroy()
+            e.destroy()
         
         e = Entry(top)
         e.grid(row=extCnt, column=0)
@@ -105,10 +109,7 @@ def openNewFolderWindow():
             top.destroy()
 
     l = Label(top, text="").grid(column=0, row=99)
-    doneB = Button(top, text="Add", command=done).grid(row=100, column=2)
-
-# TODO: Add a way so that users can see the custom folders that they added
-# TODO: Implement Custom folder edit thing 😥
+    doneB = Button(top, text="Finish", command=done).grid(row=100, column=2)
 
 addNew = Button(root, text="Add a new folder!", command=openNewFolderWindow)
 addNew.grid(row=2, column=0)
@@ -120,11 +121,13 @@ def org():
     goto = tmp["gotoDir"]
 
     organize(down, goto)
+    
+    messagebox.showinfo("Organized", "You folder has been successfully organized.")
 
 folderCnt = 0
 def foldersCommand():
     folders = {}
-    foldersNew = {}
+    foldersGui = {}
     with open("data/customExtensions.json", "r") as f:
         folders = json.load(f)
     
@@ -137,15 +140,16 @@ def foldersCommand():
     top.title("Custom Folders")
 
     for folder in folders.keys():
-        l = Label(top, text="Folder Name: ").grid(row=folderCnt, column=0)
+        l = Label(top, text="Folder Name: ")
+        l.grid(row=folderCnt, column=0)
 
         name = Entry(top)
         name.insert(0, folder)
         name.grid(row=folderCnt, column=1)
 
-        deleteFolder = Button(top, text="Delete Folder").grid(row=folderCnt, column=2)
-
         folderCnt += 1
+
+        foldersGui[(folder, name)] = []
 
         for ext in folders[folder]:
             l1 = Label(top, text="Ext Name: ").grid(row=folderCnt, column=0)
@@ -153,17 +157,39 @@ def foldersCommand():
             extName = Entry(top)
             extName.insert(0, ext)
             extName.grid(row=folderCnt, column=1)
-
-            deleteExt = Button(top, text="Delete").grid(row=folderCnt, column=2)
             folderCnt += 1
 
-        l = Label(top, text="").grid(columnspan=3, column=0, row=folderCnt)
+            foldersGui[(folder, name)].append((ext, extName))
+
+        l2 = Label(top, text="").grid(columnspan=3, column=0, row=folderCnt)
 
         folderCnt += 1
 
-    upBut = Button(top, text="Update").grid(row=folderCnt, column=2)
+    def updateFolder():
+        for ent in foldersGui.keys():
+            for ext in foldersGui[ent]:
+                for i, ex in enumerate(folders[ent[0]]):
+                    if ex == ext[0]:
+                        folders[ent[0]][i] = ext[1].get()
+            if ent[1].get() != ent[0]:
+                folders[ent[1].get()] = folders[ent[0]]
+                del folders[ent[0]]
 
-    # TODO: Implement deletion for everything 😫
+        emptyKeys = []
+        for key in folders.keys():
+            if key == "": emptyKeys.append(key)
+            else:
+                for i, ext in enumerate(folders[key]):
+                    if ext == "":
+                        del folders[key][i]
+        for key in emptyKeys:
+            del folders[key]
+
+        with open("data/customExtensions.json", "w") as f:
+            json.dump(folders, f, indent=4)
+        top.destroy()
+    
+    upBut = Button(top, text="Update", command=updateFolder).grid(row=folderCnt, column=1)
 
 orgBut = Button(root, text="Organize!", command=org)
 orgBut.grid(row=3, column=0)
