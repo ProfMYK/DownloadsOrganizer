@@ -4,16 +4,12 @@ from tkinter import filedialog
 from tkinter import messagebox
 from organizer import addNewFolder, organize, createData
 import os
-import time
 
 if not os.path.exists("data"):
     createData()
 
 root = Tk()
 root.title("Downloads Organizer")
-
-downDir = ""
-gotoDir = ""
 
 with open("data/dirs.json", "r") as f:
         tmp = json.load(f)
@@ -22,7 +18,6 @@ l1 = Label(root, text="Downloads directory: " + tmp["downDir"])
 l1.grid(row=0, column=0)
 
 def selectDownDir():
-    global downDir
     downDir = filedialog.askdirectory(initialdir="C:/", title="Select downloads directory")
     
     with open("data/dirs.json", "r") as f:
@@ -40,7 +35,6 @@ l2 = Label(root, text="Goto directory: " + tmp["gotoDir"])
 l2.grid(row=1, column=0)
 
 def selectGotoDir():
-    global gotoDir
     gotoDir = filedialog.askdirectory(initialdir="C:/", title="Select downloads directory")
 
     with open("data/dirs.json", "r") as f:
@@ -63,7 +57,6 @@ def openNewFolderWindow():
     top.title("Add a new folder")
 
     extes = []
-
 
     def addExtension():
         global extCnt
@@ -116,9 +109,9 @@ addNew.grid(row=2, column=0)
 
 def org():
     with open("data/dirs.json", "r") as f:
-        tmp = json.load(f)
-    down = tmp["downDir"]
-    goto = tmp["gotoDir"]
+        dirs = json.load(f)
+    down = dirs["downDir"]
+    goto = dirs["gotoDir"]
 
     organize(down, goto)
     
